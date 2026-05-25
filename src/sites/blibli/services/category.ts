@@ -1,4 +1,4 @@
-import type { Page } from "playwright";
+import type { Page } from "patchright";
 import { gotScraping } from "got-scraping";
 import { BrowserPool } from "../../../core/browser-pool.js";
 import { CacheManager } from "../../../core/cache-manager.js";
@@ -124,7 +124,7 @@ export class CategoryService {
 
       return this.parseCategoriesFromDOM(page);
     } finally {
-      await context.close().catch(() => {});
+      await this.browserPool.releaseContext(context);
     }
   }
 

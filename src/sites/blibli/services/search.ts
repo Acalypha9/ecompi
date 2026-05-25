@@ -1,4 +1,4 @@
-import type { Page } from "playwright";
+import type { Page } from "patchright";
 import { gotScraping } from "got-scraping";
 import { BrowserPool } from "../../../core/browser-pool.js";
 import { CacheManager } from "../../../core/cache-manager.js";
@@ -127,9 +127,10 @@ export class SearchService {
         "Accept": "application/json, text/plain, */*",
         "Referer": "https://www.blibli.com/",
         "Origin": "https://www.blibli.com",
+        "Connection": "keep-alive",
       },
-      timeout: { request: 15000 },
-      retry: { limit: 0 },
+      timeout: { request: 15000, lookup: 5000, connect: 5000 },
+      retry: { limit: 1 },
       responseType: "json",
     });
 
@@ -223,7 +224,7 @@ export class SearchService {
     } finally {
       await randomDelay(env.REQUEST_DELAY_MS);
       await searchPage?.close().catch(() => {});
-      await context.close().catch(() => {});
+      await this.browserPool.releaseContext(context);
     }
   }
 

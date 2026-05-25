@@ -32,6 +32,8 @@ export type BlibliProduct = z.infer<typeof BlibliProductSchema>;
 
 export const BlibliProductDetailSchema = BlibliProductSchema.extend({
   description: z.string().catch(""),
+  features: z.array(z.string()).catch([]),
+  topSection: z.string().catch(""),
   specifications: z
     .array(
       z.object({
